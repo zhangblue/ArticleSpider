@@ -69,7 +69,8 @@ ITEM_PIPELINES = {
     # 'scrapy.pipelines.images.ImagesPipeline': 1, # 使用默认的ImagesPipeline下载图片
     # 'ArticleSpider.pipelines.MysqlPipeline': 3,
     # 'ArticleSpider.pipelines.JsonExporterPipeline': 2,
-    'ArticleSpider.pipelines.PostgresTwistedPipeline': 1  # 将数据入库postgres
+    'ArticleSpider.pipelines.ArticleImagePipeline': 1,
+    'ArticleSpider.pipelines.PostgresTwistedPipeline': 2  # 将数据入库postgres
 }
 
 IMAGES_URLS_FIELD = "front_image_url"  # 设置自动下载图片时使用的url字段

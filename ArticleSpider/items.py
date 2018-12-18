@@ -64,10 +64,12 @@ class JobBoleArticleItem(scrapy.Item):
         input_processor=MapCompose(get_md5)
     )  # 文章url的md5
     front_image_url = scrapy.Field(
-        # output_processor=MapCompose(return_value)
-        input_processor=MapCompose(return_value)
+        output_processor=MapCompose(return_value)
+        # input_processor=MapCompose(return_value)
     )  # 文章封面图地址
-    front_image_path = scrapy.Field()  # 文章封面图本地存放位置
+    front_image_path = scrapy.Field(
+        input_processor=MapCompose(return_value)
+    )  # 文章封面图本地存放位置
     praise_nums = scrapy.Field(
         input_processor=MapCompose(get_nums)
     )  # 点赞数
