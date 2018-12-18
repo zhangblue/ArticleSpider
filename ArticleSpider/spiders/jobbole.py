@@ -28,9 +28,9 @@ class JobboleSpider(scrapy.Spider):
             yield Request(url, callback=self.parse_detail, meta={"front_image_url": image_url})  # 将结果重新放在待派去请求中。
 
         # 提取下一页并交给scrapy进行下载
-        # next_url = response.css(".next.page-numbers::attr(href)").extract_first("")
-        # if next_url:
-        #     yield Request(url=parse.urljoin(response.url, next_url), callback=self.parse)
+        next_url = response.css(".next.page-numbers::attr(href)").extract_first("")
+        if next_url:
+            yield Request(url=parse.urljoin(response.url, next_url), callback=self.parse)
 
     def parse_detail(self, response):
         article_item = JobBoleArticleItem()
