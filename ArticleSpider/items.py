@@ -83,3 +83,50 @@ class JobBoleArticleItem(scrapy.Item):
         output_processor=Join(",")
     )  # 文章的标签
     content = scrapy.Field()  # 文章的正文
+
+    def get_insert_sql(self):
+        # 执行具体的插入逻辑
+        insert_sql = """
+            insert into jobbole_article(title,create_date,url,url_object_id,front_image_url,front_image_path,comment_nums,fav_nums,praise_nums,tags) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+            """
+        params = (
+            self["title"], self["create_date"], self["url"], self["url_object_id"], self["front_image_url"], self["front_image_path"], self["comment_nums"],
+            self["fav_nums"],
+            self["praise_nums"], self["tags"])
+        return insert_sql, params
+
+
+# ------------------ dygang --------------------
+class DygangMovieMessageItem(scrapy.Item):
+    # 电影港电影信息参数
+    movie_id = scrapy.Field(
+        output_processor=TakeFirst()
+    )  # 电影id号
+    url = scrapy.Field(
+        output_processor=TakeFirst()
+    )  # 爬取的url地址
+    front_image_url = scrapy.Field(
+        output_processor=MapCompose(return_value)
+        # output_processor=TakeFirst()
+    )  # 电影海报url地址
+    front_image_path = scrapy.Field(
+        input_processor=MapCompose(return_value)
+    )  # 电影海报本地下载目录
+    movie_title = scrapy.Field(
+        output_processor=TakeFirst()
+    )  # 电影名称
+
+    def get_insert_sql(self):
+        # 执行具体的插入逻辑
+        insert_sql = """
+            insert into dygang_message(movie_id,movie_title,url,front_image_url,front_image_path) values (%s,%s,%s,%s,%s)
+            """
+        params = (self["movie_id"], self["movie_title"], self["url"], self["front_image_url"],self["front_image_path"])
+        return insert_sql, params
+
+
+class DygangMovieDownloadAddressItem(scrapy.Item):
+    # 电影下载的url
+    movie_id = scrapy.Field()  # 电影id号
+    download_url = scrapy.Field()  # 下载地址
+    download_message = scrapy.Field()  # 下载地址描述

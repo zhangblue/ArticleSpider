@@ -57,3 +57,7 @@
 
 
 # 正则表达式
+
+# 使用动态随机的user_agent
+使用python包fake-useragent。
+具体详见[https://github.com/hellysmile/fake-useragent](https://github.com/hellysmile/fake-useragent)
