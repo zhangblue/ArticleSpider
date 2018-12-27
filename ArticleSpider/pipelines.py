@@ -111,5 +111,4 @@ class ArticleImagePipeline(ImagesPipeline):
             for ok, value in results:
                 image_file_path = value["path"]
             item["front_image_path"] = image_file_path
-
         return item

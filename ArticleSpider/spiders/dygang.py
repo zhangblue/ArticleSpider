@@ -1,17 +1,30 @@
 # -*- coding: utf-8 -*-
 import scrapy
-import re
 from urllib import parse
 from scrapy.http import Request
 from scrapy.loader import ItemLoader
 from ArticleSpider.items import DygangMovieMessageItem, DygangMovieDownloadAddressItem
 from ArticleSpider.utils.common import get_num_to_last
+import time
+import os
 
 
 class DygangSpider(scrapy.Spider):
     name = 'dygang'
     allowed_domains = ['www.dygang.net']
     start_urls = ['http://www.dygang.net/ys/']
+
+    # project_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__))),  # 设置目录为当前文件所在的目录的父目录
+    # print("-----"+os.path.join(project_dir, "images"))
+
+    # 对这个spider单独设置settings
+    custom_settings = {
+        "COOKIES_ENABLED": True,  # 关闭cookie
+        "DOWNLOAD_DELAY": 2,  # 设置下载延迟
+        # 设置图片下载参数
+        "IMAGES_URLS_FIELD": "front_image_url",  # 设置自动下载图片时使用的url字段
+        "IMAGES_STORE": os.path.join('/tmp', "images/dygang")  # 设置下载图片的本地目录
+    }
 
     def parse(self, response):
         class_border1s = response.css(".border1")
@@ -26,11 +39,11 @@ class DygangSpider(scrapy.Spider):
         # 得到下一页的url
         next_urls = response.css("td[align='middle'] a")
         for next_url in next_urls:
-            text = next_url.css("::text").extract()[0]
+            text = next_url.css("::text").extract_first("")
             if text == "下一页":
                 next_url_path = next_url.css("::attr(href)").extract_first("")
-                yield Request(url=parse.urljoin(response.url, next_url_path), callback=self.parse)
-                break
+                url_next = parse.urljoin(response.url, next_url_path)
+                yield Request(url=url_next, callback=self.parse)
 
     def parse_detail(self, response):
         # 对单个的电影内容进行爬取

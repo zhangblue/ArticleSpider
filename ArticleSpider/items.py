@@ -121,7 +121,7 @@ class DygangMovieMessageItem(scrapy.Item):
         insert_sql = """
             insert into dygang_message(movie_id,movie_title,url,front_image_url,front_image_path) values (%s,%s,%s,%s,%s)
             """
-        params = (self["movie_id"], self["movie_title"], self["url"], self["front_image_url"],self["front_image_path"])
+        params = (self["movie_id"], self["movie_title"], self["url"], self["front_image_url"][0], self["front_image_path"])
         return insert_sql, params
 
 

@@ -16,7 +16,9 @@ SPIDER_MODULES = ['ArticleSpider.spiders']
 NEWSPIDER_MODULE = 'ArticleSpider.spiders'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.59 Safari/537.36'
+# USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.59 Safari/537.36'
+
+RANDOM_UA_TYPE = "random"  # 配置user-agent的随机方式
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
@@ -52,9 +54,10 @@ ROBOTSTXT_OBEY = False
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
-# DOWNLOADER_MIDDLEWARES = {
-#    'ArticleSpider.middlewares.MyCustomDownloaderMiddleware': 543,
-# }
+DOWNLOADER_MIDDLEWARES = {
+    'ArticleSpider.middlewares.RandomUserAgentMiddlewares': 2,
+    'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
+}
 
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
@@ -72,10 +75,6 @@ ITEM_PIPELINES = {
     'ArticleSpider.pipelines.ArticleImagePipeline': 1,
     'ArticleSpider.pipelines.PostgresTwistedPipeline': 2  # 将数据入库postgres
 }
-
-IMAGES_URLS_FIELD = "front_image_url"  # 设置自动下载图片时使用的url字段
-project_dir = os.path.abspath(os.path.dirname(__file__))  # 设置目录为当前文件所在的目录的父目录
-IMAGES_STORE = os.path.join(project_dir, "images")  # 设置下载图片的本地目录
 
 # 设置下载图片的大小。设定下载的最小图片大小为100*100
 # IMAGES_MIN_HEIGHT = 100  # 表示下载的图片的最小高度为100。
@@ -102,6 +101,9 @@ IMAGES_STORE = os.path.join(project_dir, "images")  # 设置下载图片的本�
 # HTTPCACHE_IGNORE_HTTP_CODES = []
 # HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
-POSTGRES_HOST = '172.16.12.49'
+# 设置数据库连接参数
+POSTGRES_USER = 'blue_pg'
+POSTGRES_HOST = '192.168.247.106'
+# POSTGRES_USER = 'all-server'
+# POSTGRES_HOST = '172.16.12.49'
 POSTGRES_DBNAME = 'scrapy-db'
-POSTGRES_USER = 'all-server'
